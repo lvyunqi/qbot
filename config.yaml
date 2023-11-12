@@ -1,0 +1,7 @@
+appid: "100000000"
+token: "shdjashdaskjhdsiuaoidusaoidsiaiodisia"
+# 插件目录
+plugin_dir: ["plugins"]
+# 激活的插件列表
+plugins:
+  - hello_plugin
