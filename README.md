@@ -1,5 +1,7 @@
 <div align="center">
 
+# QBot
+
 _✨ 基于 [腾讯机器人开放平台官方SDK](https://bot.q.qq.com/wiki/develop/api/) 实现的轻量便捷插件化机器人框架 ✨_
 
 _✨ 为开发者提供一个易使用、开发效率高的开发框架 ✨_
