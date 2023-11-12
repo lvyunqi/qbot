@@ -1,32 +1,56 @@
-# qbot
+<div align="center">
+_✨ 基于 [腾讯机器人开放平台官方SDK](https://bot.q.qq.com/wiki/develop/api/) 实现的轻量便捷插件化机器人框架 ✨_
 
-#### 介绍
-基于QQ频道官方Python SDK的机器人快速开发框架
-
-#### 软件架构
-软件架构说明
+_✨ 为开发者提供一个易使用、开发效率高的开发框架 ✨_
 
 
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
+</div>
 
 
-#### 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+# 安装教程
+
+## 环境要求
+
+- Python 3.8+
+
+## 环境配置
+
+```bash
+pip install -r requirements.txt   # 安装依赖的pip包
+```
+
+## 配置文件
+
+根目录下的`config.yaml`为基础插件配置文件，可在此配置频道机器人的基础信息
+
+## 开发流程
+
+默认插件目录为`plugins`，可在`plugins`目录下创建一个插件文件或者插件文件夹，例如`hello_plugin.py`，在`hello_plugin.py`中编写插件代码，例如：
+
+```python
+# plugins/hello_plugin.py
+from botpy.ext.command_util import Commands
+from botpy.message import Message
+from botpy import BotAPI
+
+@Commands(name=("你好", "hello"))
+async def hello(api: BotAPI, message: Message, params=None):
+    await api.post_message(channel_id=message.channel_id, content="params", msg_id=message.id)
+    await message.reply(content=params)
+    return True
+
+@Commands("晚安")
+async def good_night(api: BotAPI, message: Message, params=None):
+    await message.reply(content=params)
+    return True
+```
+
+请根据官方(QQ频道机器人SDK)[https://bot.q.qq.com/wiki/develop/pythonsdk/]文档编写插件代码
 
 
-#### 特技
+## 运行机器人
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```bash 
+python main.py
+```     
