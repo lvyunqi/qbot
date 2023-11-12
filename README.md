@@ -49,7 +49,7 @@ async def good_night(api: BotAPI, message: Message, params=None):
     return True
 ```
 
-请根据官方(QQ频道机器人SDK)[QQ频道机器人SDK](https://bot.q.qq.com/wiki/develop/pythonsdk/)文档编写插件代码
+请根据官方[QQ频道机器人SDK](https://bot.q.qq.com/wiki/develop/pythonsdk/)文档编写插件代码
 
 
 ## 运行机器人
