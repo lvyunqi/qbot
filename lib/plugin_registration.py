@@ -51,10 +51,11 @@ class PluginRegistration:
                                     PluginManager.register(attr)
                             else:
                                 continue
+                        _log.info(f"插件[{plugin_name}]加载成功")
             except Exception as e:
-                _log.error(f"加载插件[{plugin_dir}]失败，原因：{e}")
+                _log.error(f"加载插件集[{plugin_dir}]失败，原因：{e}")
                 continue
-            _log.info(f"插件[{plugin_dir}]加载成功")
+            _log.info(f"插件集[{plugin_dir}]加载成功")
         _log.info("插件加载完毕")
             
                         
