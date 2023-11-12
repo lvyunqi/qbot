@@ -1,7 +1,6 @@
 import os
-import inspect
 import importlib
-
+import inspect
 from botpy import logging
 from lib.plugin_manager import PluginManager
 
@@ -9,33 +8,37 @@ _log = logging.get_logger()
 
 class PluginRegistration:
 
-    def get_members(self, module: object) -> list:
-        '''
-        获取模块的可用成员列表
-        '''
-        members_list = []
-        members = inspect.getmembers(module)
-        for name, member in members:
-            if inspect.isfunction(member):
-                members_list.append(name)
-        return members_list
-    
-    def get_not_members(self, module: object, depth=1, max_depth=3) -> list:
-        '''
-        获取模块的非成员列表
-        '''
-        members_list = []
-        if depth <= max_depth:
-            for member_name in dir(module):
-                if member_name[0] != "_":
-                    members_list.append(member_name)
-                    # 继续调用自身，查找更深层次的成员
-                    members_list.extend(self.get_not_members(getattr(module, member_name), depth + 1, max_depth))
-        return members_list
+    def __init__(self):
+        self.loaded_modules = set()
 
-    def register(self,config: dict):
+    def get_functions(self, module: object) -> list:
+        '''
+        获取模块的可用函数列表
+        '''
+        functions = inspect.getmembers(module, inspect.isfunction)
+        return [name for name, _ in functions]
+
+    def load_plugin_module(self, plugin_dir, plugin_name):
+        key = f"{plugin_dir}.{plugin_name}"
+
+        try:
+            module = importlib.import_module(key)
+
+            # 如果已经加载过，尝试重新加载
+            if key in self.loaded_modules:
+                module = importlib.reload(module)
+            else:
+                self.loaded_modules.add(key)
+
+            return module
+        except Exception as e:
+            _log.error(f"加载插件[{plugin_name}]失败，原因：{e}")
+            return None
+
+    def register_plugins(self, config):
         plugin_dirs = config["plugin_dir"]
         plugins = config["plugins"]
+
         for plugin_dir in plugin_dirs:
             try:
                 for plugin_file in os.listdir(plugin_dir):
@@ -43,19 +46,17 @@ class PluginRegistration:
                         plugin_name = os.path.splitext(plugin_file)[0]
                         if plugin_name not in plugins:
                             continue
-                        module = importlib.import_module(f"{plugin_dir}.{plugin_name}")
-                        for obj in dir(module):
-                            if obj in self.get_members(module):
-                                attr = getattr(module, obj)
-                                if callable(attr):
-                                    PluginManager.register(attr)
-                            else:
-                                continue
-                        _log.info(f"插件[{plugin_name}]加载成功")
+
+                        module = self.load_plugin_module(plugin_dir, plugin_name)
+                        if module:
+                            functions = self.get_functions(module)
+                            for func_name in functions:
+                                func = getattr(module, func_name)
+                                if callable(func):
+                                    PluginManager.register(func)
+                            _log.info(f"插件[{plugin_name}]加载成功")
             except Exception as e:
                 _log.error(f"加载插件集[{plugin_dir}]失败，原因：{e}")
                 continue
             _log.info(f"插件集[{plugin_dir}]加载成功")
         _log.info("插件加载完毕")
-            
-                        
