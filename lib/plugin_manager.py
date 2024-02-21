@@ -1,10 +1,9 @@
 import os
 from botpy import BotAPI
-from botpy import logging
+from botpy.message import Message
 from botpy.ext.cog_yaml import read
 from botpy.logging import DEFAULT_FILE_HANDLER
-
-_log = logging.get_logger()
+from lib.log import msg_log
 
 class PluginManager:
     _plugins = []
@@ -33,8 +32,8 @@ class PluginManager:
         cls._plugins.append(plugin)
 
     @classmethod
-    async def process_event(cls, api: BotAPI, message):
-        _log.info(f"message: {message.content}")
+    async def process_event(cls, api: BotAPI, message: Message):
+        await msg_log(api=api, message=message)
         for plugin in cls._plugins:
             if await plugin(api=api, message=message):
                 return True

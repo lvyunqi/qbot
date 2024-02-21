@@ -1,5 +1,5 @@
 appid: "100000000"
-token: "shdjashdaskjhdsiuaoidusaoidsiaiodisia"
+secret: "shdjashdaskjhdsiuaoidusaoidsiaiodisia"
 # 插件目录
 plugin_dir: ["plugins"]
 # 激活的插件列表
